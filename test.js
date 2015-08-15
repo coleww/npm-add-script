@@ -43,7 +43,6 @@ tap.test('does the thing with no scripts', function (t) {
       fs.renameSync('SAFEpackage.json', 'package.json')
     })
   } catch (e) {
-
     fs.unlinkSync('package.json')
     fs.renameSync('SAFEpackage.json', 'package.json')
   }
