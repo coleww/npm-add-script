@@ -4,11 +4,17 @@ var exec = require('child_process').exec
 
 var npmAddScript = require('./')
 
-// THESE TWO TESTS DO NOT LIKE EACH OTHER, NOT ONE BIT I TELL YOOOOOOO
+// THESE //T/W/O// THREE TESTS DO NOT LIKE EACH OTHER, NOT ONE BIT I TELL YOOOOOOO
 
-testWithExistingScriptsEntry(testWithNoScriptsEntry)
+var funkies = [testWithExistingScriptsEntry, testWithNoScriptsEntry, testWithAScriptsClash] // this is officially convoluted
 
-function testWithExistingScriptsEntry (cb) {
+function testIt () {
+  if (funkies.length) funkies.pop()(testIt, function () {})
+}
+
+testIt()
+
+function testWithExistingScriptsEntry (cb, err) {
   tap.test('does the thing with existing script', function (t) {
     t.plan(2)
 
@@ -28,12 +34,12 @@ function testWithExistingScriptsEntry (cb) {
     } catch (e) {
       fs.unlinkSync('package.json')
       fs.renameSync('SAFEpackage.json', 'package.json')
-      cb()
+      err()
     }
   })
 }
 
-function testWithNoScriptsEntry () {
+function testWithNoScriptsEntry (cb, err) {
   tap.test('does the thing with no scripts', function (t) {
     t.plan(2)
 
@@ -50,10 +56,31 @@ function testWithNoScriptsEntry () {
         t.ok(!error, 'runs the added script')
         fs.unlinkSync('package.json')
         fs.renameSync('superSAFEpackage.json', 'package.json')
+        cb()
       })
     } catch (e) {
+
       fs.unlinkSync('package.json')
       fs.renameSync('superSAFEpackage.json', 'package.json')
+      err()
     }
+  })
+}
+
+function testWithAScriptsClash (cb, err) {
+  tap.test('does the thing with duplicate scripts', function (t) {
+    t.plan(1)
+
+    fs.writeFileSync('superDuperSAFEpackage.json', fs.readFileSync('package.json'))
+    try {
+      npmAddScript({key: 'test', value: 'node pseudo_test.js'})
+      err()
+    } catch (e) {
+      t.ok(fs.readFileSync('package.json').toString().match('"test": "standard && node test.js"'), 'does not override the old stuff, instead it throws an error')
+      fs.unlinkSync('package.json')
+      fs.renameSync('superDuperSAFEpackage.json', 'package.json')
+      cb()
+    }
+
   })
 }

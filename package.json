@@ -16,5 +16,8 @@
     "add",
     "script"
   ],
-  "author": "Cole Willsea <coleww@gmail.com> (http://colewillsea.com/)"
+  "author": "Cole Willsea <coleww@gmail.com> (http://colewillsea.com/)",
+  "dependencies": {
+    "yargs": "^3.19.0"
+  }
 }
