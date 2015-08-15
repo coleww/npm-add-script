@@ -1,7 +1,7 @@
 {
   "name": "npm-add-script",
   "description": "Programmatically add entries to yr package.json scripts!",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "index.js",
   "scripts": {
     "test": "standard && node test.js"
@@ -22,5 +22,13 @@
   "author": "Cole Willsea <coleww@gmail.com> (http://colewillsea.com/)",
   "dependencies": {
     "yargs": "^3.19.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/coleww/npm-add-script.git"
+  },
+  "bugs": {
+    "url": "https://github.com/coleww/npm-add-script/issues"
+  },
+  "homepage": "https://github.com/coleww/npm-add-script"
 }
