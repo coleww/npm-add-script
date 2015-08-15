@@ -6,8 +6,8 @@ var npmAddScript = require('./')
 
 // THESE TWO TESTS DO NOT LIKE EACH OTHER, NOT ONE BIT I TELL YOOOOOOO
 
-// testWithExistingScriptsEntry(testWithNoScriptsEntry)
-testWithNoScriptsEntry()
+testWithExistingScriptsEntry(testWithNoScriptsEntry)
+
 function testWithExistingScriptsEntry (cb) {
   tap.test('does the thing with existing script', function (t) {
     t.plan(2)
@@ -23,11 +23,11 @@ function testWithExistingScriptsEntry (cb) {
         t.ok(!error, 'runs the added script')
         fs.unlinkSync('package.json')
         fs.renameSync('SAFEpackage.json', 'package.json')
+        cb()
       })
     } catch (e) {
       fs.unlinkSync('package.json')
       fs.renameSync('SAFEpackage.json', 'package.json')
-    } finally {
       cb()
     }
   })
@@ -47,7 +47,7 @@ function testWithNoScriptsEntry () {
       t.ok(fs.readFileSync('package.json').toString().match('"testy": "node pseudo_test.js"'), 'adds the stuff')
 
       exec('npm run testy', function (error, stdout, stderr) {
-        t.equal(error, 'runs the added script')
+        t.ok(!error, 'runs the added script')
         fs.unlinkSync('package.json')
         fs.renameSync('superSAFEpackage.json', 'package.json')
       })

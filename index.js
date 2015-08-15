@@ -20,8 +20,8 @@ module.exports = function (script) {
       // just insert it first in the list...or wherever the name entry was.
       // if there is no name entry for some reason, goes to the catch block which will fix it
       newPackage = splicey(packaged, packaged.match('"name":').index, 0, scriptys)
-      console.log(packaged, packaged.match('"name":').index, 0, scriptys)
-      console.log(splicey(packaged, packaged.match('"name":').index, 0, scriptys))
+      // console.log(packaged, packaged.match('"name":').index, 0, scriptys)
+      // console.log(splicey(packaged, packaged.match('"name":').index, 0, scriptys))
     }
     // console.log('new', newPackage)
     fs.writeFileSync('package.json', newPackage)
