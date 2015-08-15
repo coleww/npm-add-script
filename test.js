@@ -28,7 +28,7 @@ tap.test('does the thing with existing script', function (t) {
 tap.test('does the thing with no scripts', function (t) {
   t.plan(2)
 
-  fs.writeFileSync('SAFEpackage.json', fs.readFileSync('package.json'))
+  fs.writeFileSync('superSAFEpackage.json', fs.readFileSync('package.json'))
   fs.unlinkSync('package.json')
   fs.writeFileSync('package.json', fs.readFileSync('empty.json'))
 
@@ -38,12 +38,12 @@ tap.test('does the thing with no scripts', function (t) {
     t.ok(fs.readFileSync('package.json').toString().match('"testy": "node pseudo_test.js"'), 'adds the stuff')
 
     exec('npm run testy', function (error, stdout, stderr) {
-      t.ok(!error, 'runs the added script')
+      t.equal(error, 'runs the added script')
       fs.unlinkSync('package.json')
-      fs.renameSync('SAFEpackage.json', 'package.json')
+      fs.renameSync('superSAFEpackage.json', 'package.json')
     })
   } catch (e) {
     fs.unlinkSync('package.json')
-    fs.renameSync('SAFEpackage.json', 'package.json')
+    fs.renameSync('superSAFEpackage.json', 'package.json')
   }
 })
