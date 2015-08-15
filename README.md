@@ -5,7 +5,7 @@ programmatically add `scripts` entries to yr package.json file.
 
 [![NPM](https://nodei.co/npm/npm-add-script.png)](https://nodei.co/npm/npm-add-script/)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
-[![Build Status](https://secure.travis-ci.org/YR_TRAVIS_USER_NAME/npm-add-script.png)](http://travis-ci.org/YR_TRAVIS_USER_NAME/npm-add-script)
+[![Build Status](https://secure.travis-ci.org/coleww/npm-add-script.png)](http://travis-ci.org/coleww/npm-add-script)
 
 OK SO you can use `--save` or `--save-dev` to download modules and save them to yr package.json. But what if you are building a tool that generates stuff for projects and you need to be able to insert a brand new script into an existing thing? Or what if you want to just add a script entry at the command line because you've already been running and re-running the same convoluted test command for hours?!?!
 
@@ -35,7 +35,7 @@ Examples:
 
 ### API
 
-If you're making some sort of project scaffolding tool or test library or i don't know what you can also call this from node. For example, maybe your library requires a convoluted series of manuevers to work properly, you could automagically add those commands as a scripts entry!
+If you're making some sort of project scaffolding tool or test library or i don't know what you can also call this from node. For example, maybe your library requires a convoluted series of manuevers to work properly, you could automagically add those commands as a scripts entry! 
 
 ```javascript
   var npmAddScript = require('npm-add-script')
