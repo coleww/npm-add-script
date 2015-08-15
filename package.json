@@ -1,7 +1,7 @@
 {
   "name": "npm-add-script",
   "description": "Programmatically add entries to yr package.json scripts!",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "scripts": {
     "test": "standard && node test.js"
@@ -17,7 +17,7 @@
     "script"
   ],
   "bin": {
-      "yrModule": "cmd.js"
+    "npmAddScript": "cmd.js"
   },
   "author": "Cole Willsea <coleww@gmail.com> (http://colewillsea.com/)",
   "dependencies": {
