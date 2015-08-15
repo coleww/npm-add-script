@@ -4,46 +4,56 @@ var exec = require('child_process').exec
 
 var npmAddScript = require('./')
 
-tap.test('does the thing with existing script', function (t) {
-  t.plan(2)
+// THESE TWO TESTS DO NOT LIKE EACH OTHER, NOT ONE BIT I TELL YOOOOOOO
 
-  fs.writeFileSync('SAFEpackage.json', fs.readFileSync('package.json'))
+// testWithExistingScriptsEntry(testWithNoScriptsEntry)
+testWithNoScriptsEntry()
+function testWithExistingScriptsEntry (cb) {
+  tap.test('does the thing with existing script', function (t) {
+    t.plan(2)
 
-  try {
-    npmAddScript({key: 'testy', value: 'node pseudo_test.js'})
+    fs.writeFileSync('SAFEpackage.json', fs.readFileSync('package.json'))
 
-    t.ok(fs.readFileSync('package.json').toString().match('"testy": "node pseudo_test.js",'), 'adds the stuff')
+    try {
+      npmAddScript({key: 'testy', value: 'node pseudo_test.js'})
 
-    exec('npm run testy', function (error, stdout, stderr) {
-      t.ok(!error, 'runs the added script')
+      t.ok(fs.readFileSync('package.json').toString().match('"testy": "node pseudo_test.js",'), 'adds the stuff')
+
+      exec('npm run testy', function (error, stdout, stderr) {
+        t.ok(!error, 'runs the added script')
+        fs.unlinkSync('package.json')
+        fs.renameSync('SAFEpackage.json', 'package.json')
+      })
+    } catch (e) {
       fs.unlinkSync('package.json')
       fs.renameSync('SAFEpackage.json', 'package.json')
-    })
-  } catch (e) {
+    } finally {
+      cb()
+    }
+  })
+}
+
+function testWithNoScriptsEntry () {
+  tap.test('does the thing with no scripts', function (t) {
+    t.plan(2)
+
+    fs.writeFileSync('superSAFEpackage.json', fs.readFileSync('package.json'))
     fs.unlinkSync('package.json')
-    fs.renameSync('SAFEpackage.json', 'package.json')
-  }
-})
+    fs.writeFileSync('package.json', fs.readFileSync('empty.json'))
 
-tap.test('does the thing with no scripts', function (t) {
-  t.plan(2)
+    try {
+      npmAddScript({key: 'testy', value: 'node pseudo_test.js'})
 
-  fs.writeFileSync('superSAFEpackage.json', fs.readFileSync('package.json'))
-  fs.unlinkSync('package.json')
-  fs.writeFileSync('package.json', fs.readFileSync('empty.json'))
+      t.ok(fs.readFileSync('package.json').toString().match('"testy": "node pseudo_test.js"'), 'adds the stuff')
 
-  try {
-    npmAddScript({key: 'testy', value: 'node pseudo_test.js'})
-
-    t.ok(fs.readFileSync('package.json').toString().match('"testy": "node pseudo_test.js"'), 'adds the stuff')
-
-    exec('npm run testy', function (error, stdout, stderr) {
-      t.equal(error, 'runs the added script')
+      exec('npm run testy', function (error, stdout, stderr) {
+        t.equal(error, 'runs the added script')
+        fs.unlinkSync('package.json')
+        fs.renameSync('superSAFEpackage.json', 'package.json')
+      })
+    } catch (e) {
       fs.unlinkSync('package.json')
       fs.renameSync('superSAFEpackage.json', 'package.json')
-    })
-  } catch (e) {
-    fs.unlinkSync('package.json')
-    fs.renameSync('superSAFEpackage.json', 'package.json')
-  }
-})
+    }
+  })
+}

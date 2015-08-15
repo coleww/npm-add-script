@@ -16,10 +16,12 @@ module.exports = function (script) {
     if (scriptMatch) { // already a scripts entry in this package.
       newPackage = splicey(packaged, scriptMatch.index + 17, 0, scripty + ',\n    ')
     } else { // we gotta make a scripts entry, oh gosh, wow
-      var scriptys = '  \"scripts\": {\n    ' + scripty + '\n  },\n  '
+      var scriptys = '\"scripts\": {\n    ' + scripty + '\n  },\n  '
       // just insert it first in the list...or wherever the name entry was.
       // if there is no name entry for some reason, goes to the catch block which will fix it
       newPackage = splicey(packaged, packaged.match('"name":').index, 0, scriptys)
+      console.log(packaged, packaged.match('"name":').index, 0, scriptys)
+      console.log(splicey(packaged, packaged.match('"name":').index, 0, scriptys))
     }
     // console.log('new', newPackage)
     fs.writeFileSync('package.json', newPackage)
