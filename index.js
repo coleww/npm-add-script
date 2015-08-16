@@ -1,8 +1,8 @@
 var fs = require('fs')
 
-function ThatScriptsEntryAlreadyExistsThereInThePackageDotJsonMyFriendError () {
+function ThatScriptsEntryAlreadyExistsThereInThePackageDotJsonMyFriendError (name) {
   this.name = 'ThatScriptsEntryAlreadyExistsThereInThePackageDotJsonMyFriendError'
-  this.message = 'My friend:\n  it seems as though the script entry you have specified,\n  is already present in the package.json file,\n  of your current working directory.\n  Please try again,\n  or amend this egregious error.\nThank You.'
+  this.message = 'My friend:\n  it seems as though the script entry you have specified,\n  "' + name + '"\n  is already present in the package.json file,\n  of your current working directory.\n  Please try again,\n  or amend this egregious error.\nThank You.'
 }
 
 ThatScriptsEntryAlreadyExistsThereInThePackageDotJsonMyFriendError.prototype = new Error()
@@ -23,7 +23,7 @@ module.exports = function (script) {
       var scrips = packaged.slice(scriptMatch.index)
       scrips = scrips.slice(0, scrips.match('}').index)
       if (scrips.match(script.key)) {
-        throw new ThatScriptsEntryAlreadyExistsThereInThePackageDotJsonMyFriendError()
+        throw new ThatScriptsEntryAlreadyExistsThereInThePackageDotJsonMyFriendError(script.key)
       } else {
         newPackage = splicey(packaged, scriptMatch.index + 17, 0, scripty + ',\n    ')
       }
