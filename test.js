@@ -6,7 +6,7 @@ var npmAddScript = require('./')
 
 // THESE //T/W/O// THREE TESTS DO NOT LIKE EACH OTHER, NOT ONE BIT I TELL YOOOOOOO
 
-var funkies = [testWithExistingScriptsEntry, testWithNoScriptsEntry, testWithAScriptsClash] // this is officially convoluted
+var funkies = [testWithExistingScriptsEntry, testWithNoScriptsEntry, testWithAScriptsClash, testWithnoPackage] // this is officially convoluted
 
 function testIt () {
   if (funkies.length) funkies.pop()(testIt, function () {})
@@ -22,9 +22,7 @@ function testWithExistingScriptsEntry (cb, err) {
 
     try {
       npmAddScript({key: 'testy', value: 'node pseudo_test.js'})
-
-      t.ok(fs.readFileSync('package.json').toString().match('"testy": "node pseudo_test.js",'), 'adds the stuff')
-
+      t.ok(fs.readFileSync('package.json').toString().match('"testy": "node pseudo_test.js"'), 'adds the stuff')
       exec('npm run testy', function (error, stdout, stderr) {
         t.ok(!error, 'runs the added script')
         fs.unlinkSync('package.json')
@@ -81,6 +79,22 @@ function testWithAScriptsClash (cb, err) {
       fs.renameSync('superDuperSAFEpackage.json', 'package.json')
       cb()
     }
+  })
+}
 
+function testWithnoPackage (cb, err) {
+  tap.test('does the thing with no package', function (t) {
+    t.plan(1)
+
+    fs.writeFileSync('superDuperSAFEpackage.json', fs.readFileSync('package.json'))
+    fs.unlinkSync('package.json')
+    try {
+      npmAddScript({key: 'test', value: 'node pseudo_test.js'})
+      err()
+    } catch (e) {
+      t.ok(true, 'throws a helpful error if no package.json exists')
+      fs.renameSync('superDuperSAFEpackage.json', 'package.json')
+      cb()
+    }
   })
 }

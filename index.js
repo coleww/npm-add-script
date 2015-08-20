@@ -1,4 +1,4 @@
-var fs = require('fs')
+var jsonfile = require('jsonfile')
 
 function ThatScriptsEntryAlreadyExistsThereInThePackageDotJsonMyFriendError (name) {
   this.name = 'ThatScriptsEntryAlreadyExistsThereInThePackageDotJsonMyFriendError'
@@ -8,39 +8,26 @@ function ThatScriptsEntryAlreadyExistsThereInThePackageDotJsonMyFriendError (nam
 ThatScriptsEntryAlreadyExistsThereInThePackageDotJsonMyFriendError.prototype = new Error()
 ThatScriptsEntryAlreadyExistsThereInThePackageDotJsonMyFriendError.prototype.constructor = ThatScriptsEntryAlreadyExistsThereInThePackageDotJsonMyFriendError
 
-function splicey (stir, idx, rem, insert) {
-  return (stir.slice(0, idx) + insert + stir.slice(idx + Math.abs(rem)))
+function YouDoNotAppearToBeInANodeProjectPerhapsUShouldRun_npm_init_error (name) {
+  this.name = 'YouDoNotAppearToBeInANodeProjectPerhapsUShouldRun_npm_init_error'
+  this.message = 'My friend:\n  it seems as though your current working directory\n  does not contain a package.json file,\n  and is therefore not a Node.js project.\n  Please run npm init,\n  in order to amend this tremendous violation.\nThank You.'
 }
 
+YouDoNotAppearToBeInANodeProjectPerhapsUShouldRun_npm_init_error.prototype = new Error()
+YouDoNotAppearToBeInANodeProjectPerhapsUShouldRun_npm_init_error.prototype.constructor = YouDoNotAppearToBeInANodeProjectPerhapsUShouldRun_npm_init_error
+
 module.exports = function (script) {
-  var scripty = '"' + script.key + '": "' + script.value + '"'
   try {
-    var packaged = fs.readFileSync('package.json').toString()
-    var newPackage
-    var scriptMatch = packaged.match('"scripts":')
-    if (scriptMatch) { // already a scripts entry in this package.
-
-      var scrips = packaged.slice(scriptMatch.index)
-      scrips = scrips.slice(0, scrips.match('}').index)
-      if (scrips.match(script.key)) {
-        throw new ThatScriptsEntryAlreadyExistsThereInThePackageDotJsonMyFriendError(script.key)
-      } else {
-        newPackage = splicey(packaged, scriptMatch.index + 17, 0, scripty + ',\n    ')
-      }
-
-    } else { // we gotta make a scripts entry, oh gosh, wow
-      var scriptys = '\"scripts\": {\n    ' + scripty + '\n  },\n  '
-      // just insert it first in the list...or wherever the name entry was.
-      // if there is no name entry for some reason, goes to the catch block which will fix it
-      newPackage = splicey(packaged, packaged.match('"name":').index, 0, scriptys)
-    }
-    fs.writeFileSync('package.json', newPackage)
+    var packaged = jsonfile.readFileSync('package.json')
+    if (!packaged.scripts) packaged.scripts = {}
+    if (packaged.scripts[script.key]) throw new ThatScriptsEntryAlreadyExistsThereInThePackageDotJsonMyFriendError(script.key)
+    packaged.scripts[script.key] = script.value
+    jsonfile.writeFileSync('package.json', packaged, {spaces: 2})
   } catch (e) {
-    if (e.name === 'ThatScriptsEntryAlreadyExistsThereInThePackageDotJsonMyFriendError') {
-      throw e
+    if (e.message === 'ENOENT, no such file or directory \'package.json\'') {
+      throw new YouDoNotAppearToBeInANodeProjectPerhapsUShouldRun_npm_init_error()
     } else {
-      console.log('whoops you are not in a node project, cmon now.')
-      console.log('run npm init first, yo!')
+      throw e
     }
   }
 }

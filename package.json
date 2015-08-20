@@ -21,6 +21,7 @@
   },
   "author": "Cole Willsea <coleww@gmail.com> (http://colewillsea.com/)",
   "dependencies": {
+    "jsonfile": "^2.2.1",
     "yargs": "^3.19.0"
   },
   "repository": {
