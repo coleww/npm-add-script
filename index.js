@@ -21,7 +21,7 @@ module.exports = function (script) {
     var packaged = jsonfile.readFileSync('package.json')
     if (!packaged.scripts) packaged.scripts = {}
     if (!script.force && packaged.scripts[script.key]) {
-      throw new ThatScriptsEntryAlreadyExistsThereInThePackageDotJsonMyFriendError(script.key);
+      throw new ThatScriptsEntryAlreadyExistsThereInThePackageDotJsonMyFriendError(script.key)
     }
     packaged.scripts[script.key] = script.value
     jsonfile.writeFileSync('package.json', packaged, {spaces: 2})

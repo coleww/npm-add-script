@@ -105,7 +105,6 @@ function testWithAScriptsClashUsingForce (cb, err) {
   })
 }
 
-
 function testWithnoPackage (cb, err) {
   tap.test('does the thing with no package', function (t) {
     t.plan(1)
