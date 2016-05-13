@@ -6,7 +6,7 @@ var npmAddScript = require('./')
 
 // THESE //T/W/O// THREE TESTS DO NOT LIKE EACH OTHER, NOT ONE BIT I TELL YOOOOOOO
 
-var funkies = [testWithExistingScriptsEntry, testWithNoScriptsEntry, testWithAScriptsClash, testWithnoPackage] // this is officially convoluted
+var funkies = [testWithExistingScriptsEntry, testWithNoScriptsEntry, testWithAScriptsClash, testWithAScriptsClashUsingForce, testWithnoPackage] // this is officially convoluted
 
 function testIt () {
   if (funkies.length) funkies.pop()(testIt, function () {})
@@ -81,6 +81,30 @@ function testWithAScriptsClash (cb, err) {
     }
   })
 }
+
+function testWithAScriptsClashUsingForce (cb, err) {
+  tap.test('using --force, replaces an existing script', function (t) {
+    t.plan(2)
+
+    fs.writeFileSync('SAFEpackage.json', fs.readFileSync('package.json'))
+
+    try {
+      npmAddScript({key: 'test', value: 'node replaced_test.js', force: true})
+      t.ok(fs.readFileSync('package.json').toString().match('"test": "node replaced_test.js"'), 'adds the stuff')
+      exec('npm run test', function (error, stdout, stderr) {
+        t.ok(!error, 'runs the added script')
+        fs.unlinkSync('package.json')
+        fs.renameSync('SAFEpackage.json', 'package.json')
+        cb()
+      })
+    } catch (e) {
+      fs.unlinkSync('package.json')
+      fs.renameSync('SAFEpackage.json', 'package.json')
+      err()
+    }
+  })
+}
+
 
 function testWithnoPackage (cb, err) {
   tap.test('does the thing with no package', function (t) {
