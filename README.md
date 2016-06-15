@@ -27,9 +27,11 @@ Options:
   -k, --key    the name of your script                                [required]
   -v, --value  your script                                            [required]
   -h, --help   Show help                                               [boolean]
+  -f, --force  Override existing script entry                          [boolean]
 
 Examples:
   npmAddScript -k test -v "node test.js"
+  npmAddScript -k test -v "node test2.js" -f
 ```
 
 
@@ -41,4 +43,5 @@ If you're making some sort of project scaffolding tool or test library or i don'
   var npmAddScript = require('npm-add-script')
   // do some stuff related to yr special snowflake of a node module
   npmAddScript({key: "specialSnowFlake" , value: "node special_snowflake.js"})
+  npmAddScript({key: "specialSnowFlake" , value: "node specialer_snowflake.js" , force: true})
 ```
