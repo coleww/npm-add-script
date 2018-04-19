@@ -1,4 +1,6 @@
 var jsonfile = require('jsonfile')
+var path = require('path')
+var root = require('package.root')
 
 function ThatScriptsEntryAlreadyExistsThereInThePackageDotJsonMyFriendError (name) {
   this.name = 'ThatScriptsEntryAlreadyExistsThereInThePackageDotJsonMyFriendError'
@@ -18,13 +20,17 @@ YouDoNotAppearToBeInANodeProjectPerhapsUShouldRun_npm_init_error.prototype.const
 
 module.exports = function (script) {
   try {
-    var packaged = jsonfile.readFileSync('package.json')
+    var packagedPath = 'package.json'
+    if (script.root) {
+      packagedPath = path.join(root.path, packagedPath)
+    }
+    var packaged = jsonfile.readFileSync(packagedPath)
     if (!packaged.scripts) packaged.scripts = {}
     if (!script.force && packaged.scripts[script.key]) {
       throw new ThatScriptsEntryAlreadyExistsThereInThePackageDotJsonMyFriendError(script.key)
     }
     packaged.scripts[script.key] = script.value
-    jsonfile.writeFileSync('package.json', packaged, {spaces: 2})
+    jsonfile.writeFileSync(packagedPath, packaged, { spaces: 2 })
   } catch (e) {
     if (e.message === 'ENOENT, no such file or directory \'package.json\'') {
       throw new YouDoNotAppearToBeInANodeProjectPerhapsUShouldRun_npm_init_error()
