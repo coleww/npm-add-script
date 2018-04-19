@@ -24,7 +24,6 @@ module.exports = function (script) {
     if (script.root) {
       packagedPath = path.join(root.path, packagedPath)
     }
-    console.log(packagedPath)
     var packaged = jsonfile.readFileSync(packagedPath)
     if (!packaged.scripts) packaged.scripts = {}
     if (!script.force && packaged.scripts[script.key]) {
